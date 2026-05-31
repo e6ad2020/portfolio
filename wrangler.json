@@ -1,16 +1,7 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "portfolio",
-	"main": "./src/worker/index.ts",
 	"compatibility_date": "2025-10-08",
-	"pages_build_output_dir": "./dist/client",
-	"compatibility_flags": ["nodejs_compat"],
-	"observability": {
-		"enabled": true
-	},
-	"upload_source_maps": true,
-	"assets": {
-		"directory": "./dist/client",
-		"not_found_handling": "single-page-application"
-	}
+	"pages_build_output_dir": "./dist",
+	"compatibility_flags": ["nodejs_compat"]
 }
