@@ -54,12 +54,23 @@
 }
 
 .logo-text {
+	display: flex;
+	align-items: center;
+	gap: 10px;
 	font-size: 1.5rem;
 	font-weight: 800;
 	letter-spacing: -0.5px;
 }
 
-.logo-text span {
+.nav-logo-img {
+	height: 36px;
+	width: 36px;
+	object-fit: contain;
+	border-radius: 6px;
+	flex-shrink: 0;
+}
+
+.logo-accent {
 	color: var(--color-brand);
 }
 

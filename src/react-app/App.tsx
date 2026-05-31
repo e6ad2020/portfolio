@@ -128,7 +128,8 @@ function App() {
 			<header className="portfolio-header">
 				<div className="header-container">
 					<a href="#" className="logo-text">
-						Eyad<span>.Gaber</span>
+						<img src="/Logo.svg" alt="Logo" className="nav-logo-img" />
+						<span>Eyad<span className="logo-accent">.Gaber</span></span>
 					</a>
 					<nav className="nav-links">
 						<a href="#about" onClick={(e) => scrollToSection(e, "about")}>About</a>

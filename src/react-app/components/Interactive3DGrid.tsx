@@ -53,8 +53,35 @@ export const Interactive3DGrid: React.FC = () => {
 		const spacing = 55;    // 3D space spacing between points
 		const fov = 350;       // Field of view focal length
 		const yOffset = 230;   // Height position of the grid relative to camera center
-		
+
 		let time = 0;
+
+		// Bouncing shapes that move across the grid
+		interface BouncingShape {
+			type: "circle" | "triangle" | "diamond" | "square" | "hexagon";
+			gridX: number;     // position in 3D grid X
+			gridZ: number;     // position in 3D grid Z
+			speedX: number;    // movement speed X
+			speedZ: number;    // movement speed Z
+			bouncePhase: number; // phase offset for bounce animation
+			bounceSpeed: number; // speed of bounce
+			bounceHeight: number; // max bounce height
+			size: number;       // shape size in 3D space
+			color: [number, number, number]; // RGB
+		}
+
+		const shapes: BouncingShape[] = [
+			{ type: "circle",   gridX: -200, gridZ: 300,  speedX: 18, speedZ: 12,  bouncePhase: 0,    bounceSpeed: 2.8, bounceHeight: 120, size: 22, color: [255, 100, 130] },
+			{ type: "triangle", gridX: 150,  gridZ: 500,  speedX: -14, speedZ: 10,  bouncePhase: 1.2,  bounceSpeed: 3.2, bounceHeight: 100, size: 20, color: [100, 220, 255] },
+			{ type: "diamond",  gridX: 0,    gridZ: 200,  speedX: 22, speedZ: -8,  bouncePhase: 2.5,  bounceSpeed: 2.5, bounceHeight: 140, size: 18, color: [255, 200, 60] },
+			{ type: "square",   gridX: -300, gridZ: 600,  speedX: 10, speedZ: 15,  bouncePhase: 0.8,  bounceSpeed: 3.5, bounceHeight: 90,  size: 16, color: [130, 255, 170] },
+			{ type: "hexagon",  gridX: 250,  gridZ: 400,  speedX: -16, speedZ: -12, bouncePhase: 3.8,  bounceSpeed: 2.2, bounceHeight: 110, size: 19, color: [200, 130, 255] },
+		];
+
+		// Grid extent boundaries for bounce wrapping
+		const gridExtentX = (gridCols / 2) * spacing;
+		const gridExtentZMin = -2 * spacing;
+		const gridExtentZMax = (gridRows - 2) * spacing;
 
 		// Animation loop
 		const animate = () => {
@@ -73,11 +100,11 @@ export const Interactive3DGrid: React.FC = () => {
 			const cy = height / 2;
 
 			// Normalized mouse positions
-			const mxNorm = mouseRef.current.isHovered 
-				? (mouseRef.current.x - cx) / cx 
+			const mxNorm = mouseRef.current.isHovered
+				? (mouseRef.current.x - cx) / cx
 				: Math.sin(time * 0.5) * 0.25;
-			const myNorm = mouseRef.current.isHovered 
-				? (mouseRef.current.y - cy) / cy 
+			const myNorm = mouseRef.current.isHovered
+				? (mouseRef.current.y - cy) / cy
 				: Math.cos(time * 0.5) * 0.12;
 
 			// Yaw (rotation around Y-axis) and Pitch (rotation around X-axis)
@@ -218,6 +245,112 @@ export const Interactive3DGrid: React.FC = () => {
 						}
 					}
 				}
+			}
+
+			// --- Draw bouncing shapes on the grid ---
+			for (const shape of shapes) {
+				// Update position - move across the grid
+				shape.gridX += shape.speedX * 0.008;
+				shape.gridZ += shape.speedZ * 0.008;
+
+				// Wrap around grid boundaries
+				if (shape.gridX > gridExtentX) { shape.gridX = -gridExtentX; }
+				if (shape.gridX < -gridExtentX) { shape.gridX = gridExtentX; }
+				if (shape.gridZ > gridExtentZMax) { shape.gridZ = gridExtentZMin; }
+				if (shape.gridZ < gridExtentZMin) { shape.gridZ = gridExtentZMax; }
+
+				// Compute bounce height using abs(sin) for a trampoline feel
+				const bounceT = time * shape.bounceSpeed + shape.bouncePhase;
+				const rawBounce = Math.abs(Math.sin(bounceT));
+				// Ease it for a more natural squash-bounce feel
+				const bounceY = Math.pow(rawBounce, 0.6) * shape.bounceHeight;
+
+				// Grid surface Y (with wave)
+				const surfaceDist = Math.sqrt(shape.gridX * shape.gridX + shape.gridZ * shape.gridZ);
+				const surfaceY = yOffset + Math.sin(surfaceDist * 0.005 - time * 1.5) * 22;
+
+				// Shape 3D position: on grid X/Z, bouncing above Y
+				const shapeY = surfaceY - bounceY;
+
+				// Project shape position
+				const shapeProj = project(shape.gridX, shapeY, shape.gridZ);
+				if (!shapeProj) continue;
+
+				// Project shadow position (on the grid surface)
+				const shadowProj = project(shape.gridX, surfaceY, shape.gridZ);
+
+				const depthOpacity = Math.max(0, Math.min(1, 350 / shapeProj.depth));
+				if (depthOpacity < 0.05) continue;
+
+				const screenScale = fov / shapeProj.depth;
+				const drawSize = shape.size * screenScale;
+				const [r, g, b] = shape.color;
+
+				// Draw shadow on grid surface
+				if (shadowProj) {
+					const shadowOpacity = depthOpacity * 0.2 * (1 - bounceY / shape.bounceHeight);
+					const shadowSize = drawSize * (0.6 + 0.4 * (bounceY / shape.bounceHeight));
+					ctx.beginPath();
+					ctx.ellipse(shadowProj.sx, shadowProj.sy, shadowSize, shadowSize * 0.35, 0, 0, Math.PI * 2);
+					ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${shadowOpacity})`;
+					ctx.fill();
+				}
+
+				// Draw glow behind shape
+				const glowRadius = drawSize * 2.5;
+				const glowGrad = ctx.createRadialGradient(shapeProj.sx, shapeProj.sy, 0, shapeProj.sx, shapeProj.sy, glowRadius);
+				glowGrad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${depthOpacity * 0.15})`);
+				glowGrad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+				ctx.beginPath();
+				ctx.arc(shapeProj.sx, shapeProj.sy, glowRadius, 0, Math.PI * 2);
+				ctx.fillStyle = glowGrad;
+				ctx.fill();
+
+				// Squash effect when near the ground
+				const squash = bounceY < 15 ? 0.7 + 0.3 * (bounceY / 15) : 1;
+				const stretchX = 1 / squash;
+				const stretchY = squash;
+
+				// Draw the shape itself
+				ctx.save();
+				ctx.translate(shapeProj.sx, shapeProj.sy);
+				ctx.scale(stretchX, stretchY);
+
+				ctx.beginPath();
+				if (shape.type === "circle") {
+					ctx.arc(0, 0, drawSize, 0, Math.PI * 2);
+				} else if (shape.type === "triangle") {
+					ctx.moveTo(0, -drawSize);
+					ctx.lineTo(-drawSize * 0.87, drawSize * 0.5);
+					ctx.lineTo(drawSize * 0.87, drawSize * 0.5);
+					ctx.closePath();
+				} else if (shape.type === "diamond") {
+					ctx.moveTo(0, -drawSize);
+					ctx.lineTo(drawSize * 0.7, 0);
+					ctx.lineTo(0, drawSize);
+					ctx.lineTo(-drawSize * 0.7, 0);
+					ctx.closePath();
+				} else if (shape.type === "square") {
+					const half = drawSize * 0.75;
+					ctx.rect(-half, -half, half * 2, half * 2);
+				} else if (shape.type === "hexagon") {
+					for (let i = 0; i < 6; i++) {
+						const angle = (Math.PI / 3) * i - Math.PI / 6;
+						const hx = Math.cos(angle) * drawSize;
+						const hy = Math.sin(angle) * drawSize;
+						if (i === 0) ctx.moveTo(hx, hy);
+						else ctx.lineTo(hx, hy);
+					}
+					ctx.closePath();
+				}
+
+				ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${depthOpacity * 0.35})`;
+				ctx.fill();
+				ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${depthOpacity * 0.8})`;
+				ctx.lineWidth = 1.5;
+				ctx.stroke();
+
+				ctx.restore();
 			}
 
 			animationId = requestAnimationFrame(animate);
