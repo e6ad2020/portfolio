@@ -6,6 +6,161 @@ interface IconProps {
 	onClick?: () => void;
 }
 
+const TechSvg: React.FC<IconProps & { children: React.ReactNode; fill?: string }> = ({
+	size = 18,
+	className,
+	children,
+	fill = "none"
+}) => (
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 24 24"
+		fill={fill}
+		stroke="currentColor"
+		strokeWidth="1.8"
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		className={className}
+		aria-hidden="true"
+	>
+		{children}
+	</svg>
+);
+
+export const TypeScriptLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<rect x="3" y="3" width="18" height="18" rx="2" />
+		<path d="M7 8h6" />
+		<path d="M10 8v8" />
+		<path d="M14 15c.8.7 2.7.8 3.2-.1.4-.8-.1-1.5-1.5-1.9-1.4-.4-1.9-1.2-1.4-2 .5-.9 2.1-1 3-.3" />
+	</TechSvg>
+);
+
+export const JavaScriptLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<rect x="3" y="3" width="18" height="18" rx="2" />
+		<path d="M8 9v5.2c0 1.5-.9 2-2.1 1.4" />
+		<path d="M13 15c.8.7 2.7.8 3.2-.1.4-.8-.1-1.5-1.5-1.9-1.4-.4-1.9-1.2-1.4-2 .5-.9 2.1-1 3-.3" />
+	</TechSvg>
+);
+
+export const HtmlCssLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M5 3h14l-1.2 15.2L12 21l-5.8-2.8L5 3Z" />
+		<path d="M9 8h6" />
+		<path d="M8.5 12h7l-.4 3.6L12 17l-3.1-1.4" />
+	</TechSvg>
+);
+
+export const PythonLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M12 3h3.2A3.8 3.8 0 0 1 19 6.8V10H8.8A3.8 3.8 0 0 0 5 13.8V15" />
+		<path d="M12 21H8.8A3.8 3.8 0 0 1 5 17.2V14h10.2A3.8 3.8 0 0 0 19 10.2V9" />
+		<circle cx="14.5" cy="6.5" r=".6" fill="currentColor" stroke="none" />
+		<circle cx="9.5" cy="17.5" r=".6" fill="currentColor" stroke="none" />
+	</TechSvg>
+);
+
+export const ReactLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<ellipse cx="12" cy="12" rx="9" ry="3.7" />
+		<ellipse cx="12" cy="12" rx="9" ry="3.7" transform="rotate(60 12 12)" />
+		<ellipse cx="12" cy="12" rx="9" ry="3.7" transform="rotate(120 12 12)" />
+		<circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none" />
+	</TechSvg>
+);
+
+export const ViteLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M4 4.5 12 20l8-15.5-7.2 1.3L12 3 11.2 5.8 4 4.5Z" />
+		<path d="m12 8-2.2 4h3L11.6 16 16 10h-3l1-2h-2Z" />
+	</TechSvg>
+);
+
+export const FramerLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M6 3h12v6H6V3Z" />
+		<path d="M6 9h12l-6 6H6V9Z" />
+		<path d="M6 15h6v6l-6-6Z" />
+	</TechSvg>
+);
+
+export const NodeLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3Z" />
+		<path d="M9 15V9l6 6V9" />
+	</TechSvg>
+);
+
+export const ExpressLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M4 16V8h6" />
+		<path d="M4 12h5" />
+		<path d="m13 9 7 7" />
+		<path d="m20 9-7 7" />
+	</TechSvg>
+);
+
+export const HonoLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M12 3c3.4 3.4 6 6.2 6 10a6 6 0 0 1-12 0c0-2.5 1.3-4.3 3.1-6.2.2 2.4 1.7 3.6 2.9 4.2V3Z" />
+		<path d="M9.5 15a2.5 2.5 0 0 0 5 0c0-1.6-1.1-2.7-2.5-4-1.4 1.3-2.5 2.4-2.5 4Z" />
+	</TechSvg>
+);
+
+export const BunLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M4.5 11.7C4.5 7.5 7.9 4.8 12 4.8s7.5 2.7 7.5 6.9c0 4.4-3.1 7.5-7.5 7.5s-7.5-3.1-7.5-7.5Z" />
+		<path d="M7.6 7.2 5.7 5.1" />
+		<path d="M10 6 9.2 3.5" />
+		<path d="M14 6l.8-2.5" />
+		<path d="M16.4 7.2l1.9-2.1" />
+		<circle cx="9.2" cy="12" r=".6" fill="currentColor" stroke="none" />
+		<circle cx="14.8" cy="12" r=".6" fill="currentColor" stroke="none" />
+		<path d="M10 15c1.1.7 2.9.7 4 0" />
+	</TechSvg>
+);
+
+export const WebSocketLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M7 7h5l5 5-5 5H7l5-5-5-5Z" />
+		<path d="M4 12h8" />
+		<path d="M16 8h4v8h-4" />
+	</TechSvg>
+);
+
+export const JwtLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M12 3v18" />
+		<path d="M3 12h18" />
+		<path d="m5.6 5.6 12.8 12.8" />
+		<path d="m18.4 5.6-12.8 12.8" />
+		<circle cx="12" cy="12" r="2.5" />
+	</TechSvg>
+);
+
+export const LinuxLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M12 3c-2 0-3.4 1.6-3.4 4.1 0 1.5-.4 2.4-1.3 3.8-.8 1.2-1.8 2.9-1.8 5.1 0 3.1 2.7 5 6.5 5s6.5-1.9 6.5-5c0-2.2-1-3.9-1.8-5.1-.9-1.4-1.3-2.3-1.3-3.8C15.4 4.6 14 3 12 3Z" />
+		<circle cx="10.5" cy="7.3" r=".5" fill="currentColor" stroke="none" />
+		<circle cx="13.5" cy="7.3" r=".5" fill="currentColor" stroke="none" />
+		<path d="M10 11h4" />
+	</TechSvg>
+);
+
+export const GitLogoIcon: React.FC<IconProps> = (props) => (
+	<TechSvg {...props}>
+		<path d="M12 2.8 21.2 12 12 21.2 2.8 12 12 2.8Z" />
+		<path d="M8.5 8.5 15.5 15.5" />
+		<path d="M8.5 8.5h5" />
+		<circle cx="8.5" cy="8.5" r="1" fill="currentColor" stroke="none" />
+		<circle cx="15.5" cy="15.5" r="1" fill="currentColor" stroke="none" />
+		<circle cx="13.5" cy="8.5" r="1" fill="currentColor" stroke="none" />
+	</TechSvg>
+);
+
 export const GitHubIcon: React.FC<IconProps> = ({ size = 20, className, onClick }) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

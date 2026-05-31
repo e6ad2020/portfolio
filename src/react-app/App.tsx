@@ -12,7 +12,20 @@ import {
 	TerminalIcon,
 	EnvelopeIcon,
 	ChevronDownIcon,
-	SparklesIcon
+	SparklesIcon,
+	TypeScriptLogoIcon,
+	JavaScriptLogoIcon,
+	HtmlCssLogoIcon,
+	PythonLogoIcon,
+	ReactLogoIcon,
+	ViteLogoIcon,
+	FramerLogoIcon,
+	NodeLogoIcon,
+	BunLogoIcon,
+	WebSocketLogoIcon,
+	JwtLogoIcon,
+	LinuxLogoIcon,
+	GitLogoIcon
 } from "./assets/icons";
 import "./App.css";
 
@@ -31,6 +44,41 @@ interface Project {
 
 function App() {
 	const [activeDemo, setActiveDemo] = useState<string | null>(null);
+
+	const techIcons: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+		TypeScript: TypeScriptLogoIcon,
+		JavaScript: JavaScriptLogoIcon,
+		"HTML5 / CSS3": HtmlCssLogoIcon,
+		Python: PythonLogoIcon,
+		"Shell Scripting (Bash)": TerminalIcon,
+		React: ReactLogoIcon,
+		Vite: ViteLogoIcon,
+		"Framer Motion": FramerLogoIcon,
+		"Vanilla CSS System": HtmlCssLogoIcon,
+		"Responsive Web Design": CodeIcon,
+		"Node.js": NodeLogoIcon,
+		Bun: BunLogoIcon,
+		"WebSockets (ws)": WebSocketLogoIcon,
+		"RESTful APIs": CodeIcon,
+		"JWT Authentication": JwtLogoIcon,
+		"Linux / Unix": LinuxLogoIcon,
+		"Operating Systems (OS)": TerminalIcon,
+		"Computer Networks": WebSocketLogoIcon,
+		"IT Infrastructure": DatabaseIcon,
+		"PostgreSQL / SQLite": DatabaseIcon,
+		"Git & GitHub": GitLogoIcon
+	};
+
+	const renderSkillTag = (tech: string) => {
+		const TechIcon = techIcons[tech] ?? CodeIcon;
+
+		return (
+			<span className="tag" key={tech}>
+				<TechIcon size={15} className="tag-icon" />
+				<span>{tech}</span>
+			</span>
+		);
+	};
 
 	const projects: Project[] = [
 		{
@@ -187,46 +235,28 @@ function App() {
 						<div className="skills-card">
 							<h3>Languages</h3>
 							<div className="tags-container">
-								<span className="tag">TypeScript</span>
-								<span className="tag">JavaScript</span>
-								<span className="tag">HTML5 / CSS3</span>
-								<span className="tag">Python</span>
-								<span className="tag">Shell Scripting (Bash)</span>
+								{["TypeScript", "JavaScript", "HTML5 / CSS3", "Python", "Shell Scripting (Bash)"].map(renderSkillTag)}
 							</div>
 						</div>
 
 						<div className="skills-card">
 							<h3>Frontend</h3>
 							<div className="tags-container">
-								<span className="tag">React</span>
-								<span className="tag">Vite</span>
-								<span className="tag">Framer Motion</span>
-								<span className="tag">Vanilla CSS System</span>
-								<span className="tag">Responsive Web Design</span>
+								{["React", "Vite", "Framer Motion", "Vanilla CSS System", "Responsive Web Design"].map(renderSkillTag)}
 							</div>
 						</div>
 
 						<div className="skills-card">
 							<h3>Backend &amp; APIs</h3>
 							<div className="tags-container">
-								<span className="tag">Node.js</span>
-								<span className="tag">Express.js</span>
-								<span className="tag">Hono API</span>
-								<span className="tag">WebSockets (ws)</span>
-								<span className="tag">RESTful APIs</span>
-								<span className="tag">JWT Authentication</span>
+								{["Node.js", "Bun", "WebSockets (ws)", "RESTful APIs", "JWT Authentication"].map(renderSkillTag)}
 							</div>
 						</div>
 
 						<div className="skills-card">
 							<h3>OS, Networks &amp; Systems</h3>
 							<div className="tags-container">
-								<span className="tag">Linux / Unix</span>
-								<span className="tag">Operating Systems (OS)</span>
-								<span className="tag">Computer Networks</span>
-								<span className="tag">IT Infrastructure</span>
-								<span className="tag">PostgreSQL / SQLite</span>
-								<span className="tag">Git &amp; GitHub</span>
+								{["Linux / Unix", "Operating Systems (OS)", "Computer Networks", "IT Infrastructure", "PostgreSQL / SQLite", "Git & GitHub"].map(renderSkillTag)}
 							</div>
 						</div>
 					</div>

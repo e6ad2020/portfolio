@@ -266,18 +266,28 @@
 }
 
 .tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
 	font-size: 0.85rem;
 	font-weight: 500;
 	background-color: rgba(255, 255, 255, 0.03);
 	color: var(--text-secondary);
-	padding: 6px 14px;
+	padding: 7px 14px 7px 11px;
 	border-radius: var(--radius-full);
 	border: 1px solid rgba(255, 255, 255, 0.05);
+	line-height: 1;
 }
 
 .tag:hover {
 	color: var(--text-primary);
 	border-color: var(--text-muted);
+}
+
+.tag-icon {
+	flex: 0 0 auto;
+	color: var(--color-brand);
+	filter: drop-shadow(0 0 8px rgba(0, 151, 178, 0.25));
 }
 
 /* Projects Section */
