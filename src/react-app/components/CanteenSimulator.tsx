@@ -112,7 +112,7 @@ export const CanteenSimulator: React.FC = () => {
 
 		// Create order
 		const newOrder: Order = {
-			id: `ORD-${Math.floor(100 + Math.random() * 900)}`,
+			id: `ORD-${Math.floor(100 + Math.random() * 900)}`, // eslint-disable-line react-hooks/purity
 			items: [...cart],
 			total: parseFloat(total.toFixed(2)),
 			payment: paymentMethod,
