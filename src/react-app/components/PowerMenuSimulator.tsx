@@ -47,6 +47,7 @@ export const PowerMenuSimulator: React.FC = () => {
 		return () => {
 			window.removeEventListener("keydown", handleGlobalKeyDown);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isOpen, selectedIndex]);
 
 	// Specific handler for Alt+F4 key combo
@@ -69,6 +70,7 @@ export const PowerMenuSimulator: React.FC = () => {
 
 	const triggerAction = (action: Action) => {
 		setIsOpen(false);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		setScreenState(action.id as any);
 
 		setTimeout(() => {
