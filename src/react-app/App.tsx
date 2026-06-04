@@ -361,10 +361,10 @@ function App() {
 								Feel free to reach out. I'm always open to discussing new opportunities or helping with charity tech implementations.
 							</p>
 							<p className="contact-email-display" style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--color-brand)", marginBottom: "24px" }}>
-								eyad.dodo123456789@gmail.com
+								eyadl@proton.me
 							</p>
 							<div className="contact-actions">
-								<a href="mailto:eyad.dodo123456789@gmail.com" className="mail-btn">
+								<a href="mailto:eyadl@proton.me" className="mail-btn">
 									<EnvelopeIcon size={16} />
 									<span>Send an Email</span>
 								</a>
@@ -386,7 +386,7 @@ function App() {
 			{/* Footer */}
 			<footer className="portfolio-footer">
 				<div className="footer-container">
-					<p>&copy; 2026 Eyad Gaber. All rights reserved. | eyad.dodo123456789@gmail.com</p>
+					<p>&copy; 2026 Eyad Gaber. All rights reserved. | eyadl@proton.me</p>
 					<p className="footer-meta">
 						Powered by React, Cloudflare Workers, and Vanilla CSS.
 					</p>
