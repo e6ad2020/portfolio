@@ -1,0 +1,85 @@
+---
+// src/components/ui/Nav.astro
+---
+
+<header class="nav-header">
+  <nav class="nav-menu" aria-label="Main Navigation">
+    <ul class="nav-list">
+      <li><a href="#work" class="nav-link">Work</a></li>
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#stack" class="nav-link">Stack</a></li>
+      <li><a href="#experience" class="nav-link">Experience</a></li>
+      <li><a href="#philosophy" class="nav-link">Philosophy</a></li>
+      <li><a href="#contact" class="nav-link nav-link--cta">Get in Touch</a></li>
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .nav-header {
+    position: fixed;
+    top: clamp(0.75rem, 1.5vh, 1.25rem);
+    left: 0;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: var(--z-nav);
+    pointer-events: none;
+  }
+
+  .nav-menu {
+    pointer-events: auto;
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.6rem, 1.2vw, 1.15rem);
+    list-style: none;
+    padding: 0.3rem 0.85rem;
+    background: rgba(14, 14, 19, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+
+  .nav-link {
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    transition: color 0.25s ease;
+  }
+
+  .nav-link:hover {
+    color: #ffffff;
+  }
+
+  .nav-link--cta {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.74rem;
+    padding: 0.25rem 0.7rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-full);
+    transition: all 0.3s ease;
+  }
+
+  .nav-link--cta:hover {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: #070709;
+    box-shadow: 0 0 20px var(--accent-primary-glow);
+  }
+
+  @media (max-width: 768px) {
+    .nav-list {
+      display: none;
+    }
+  }
+</style>

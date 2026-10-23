@@ -1,0 +1,245 @@
+---
+// src/components/sections/Contact.astro
+---
+
+<section class="contact-section" id="contact" aria-label="Contact">
+  <div class="container">
+    <div class="contact-wrapper glass-panel">
+      <div class="contact-badge">
+        <span class="badge-line"></span>
+        <span class="badge-text tracking-wide-caps">CONNECT</span>
+      </div>
+
+      <h2 class="contact-title font-display">
+        LET'S HELP EACH OTHER BECOME BETTER.
+      </h2>
+
+      <p class="contact-subtitle">
+        Whether collaborating on open-source initiatives, building modern web apps, or exchanging ideas — let's connect.
+      </p>
+
+      <div class="contact-actions">
+        <!-- Interactive Copy Email Button -->
+        <button id="copy-email-btn" class="email-btn" data-email="eyadl@proton.me" aria-label="Copy email address to clipboard">
+          <span class="email-text">eyadl@proton.me</span>
+          <span class="copy-pill" id="copy-pill">
+            <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span class="pill-label" id="pill-label">Copy</span>
+          </span>
+        </button>
+
+        <a href="mailto:eyadl@proton.me" class="direct-mail-btn">
+          <span>Open Mail Client</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </a>
+      </div>
+
+      <div class="socials-bar">
+        <span class="socials-label font-mono">CHANNELS:</span>
+        <div class="socials-links">
+          <a href="https://github.com/e6ad2020" target="_blank" rel="noopener noreferrer" class="social-link">GitHub</a>
+          <span class="social-sep">/</span>
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-link">LinkedIn</a>
+          <span class="social-sep">/</span>
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-link">X (Twitter)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const copyBtn = document.getElementById('copy-email-btn');
+  const pillLabel = document.getElementById('pill-label');
+  const copyPill = document.getElementById('copy-pill');
+
+  if (copyBtn && pillLabel && copyPill) {
+    copyBtn.addEventListener('click', async () => {
+      const email = copyBtn.getAttribute('data-email') || 'eyadl@proton.me';
+      try {
+        await navigator.clipboard.writeText(email);
+        pillLabel.textContent = 'Copied!';
+        copyPill.classList.add('copied');
+
+        setTimeout(() => {
+          pillLabel.textContent = 'Copy';
+          copyPill.classList.remove('copied');
+        }, 2200);
+      } catch (err) {
+        window.location.href = `mailto:${email}`;
+      }
+    });
+  }
+</script>
+
+<style>
+  .contact-section {
+    position: relative;
+    padding: clamp(6rem, 12vw, 12rem) 0;
+    background-color: var(--bg-primary);
+    z-index: var(--z-content);
+  }
+
+  .contact-wrapper {
+    padding: clamp(3rem, 6vw, 6rem);
+    background: radial-gradient(circle at top right, rgba(255, 85, 0, 0.12) 0%, rgba(14, 14, 19, 0.8) 60%);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .contact-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .badge-line {
+    width: 28px;
+    height: 1px;
+    background: var(--accent-primary);
+  }
+
+  .badge-text {
+    color: var(--accent-primary);
+    font-size: var(--text-xs);
+  }
+
+  .contact-title {
+    font-size: clamp(2rem, 5.5vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    max-width: 900px;
+    margin-bottom: var(--space-lg);
+  }
+
+  .contact-subtitle {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    color: var(--text-secondary);
+    max-width: 650px;
+    line-height: 1.6;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .contact-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: clamp(3rem, 5vw, 4.5rem);
+  }
+
+  .email-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.4rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-full);
+    color: #ffffff;
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .email-btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .copy-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+  }
+
+  .copy-pill.copied {
+    background: #00ffaa;
+    color: #070709;
+    font-weight: 700;
+  }
+
+  .direct-mail-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.4rem;
+    background: var(--accent-primary);
+    border-radius: var(--radius-full);
+    color: #070709;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 25px var(--accent-primary-glow);
+  }
+
+  .direct-mail-btn:hover {
+    background: #33ddff;
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px var(--accent-primary-glow);
+  }
+
+  .socials-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: var(--space-xl);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .socials-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+  }
+
+  .socials-links {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .social-link {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+    transition: color 0.2s ease;
+  }
+
+  .social-link:hover {
+    color: #ffffff;
+  }
+
+  .social-sep {
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+  }
+</style>

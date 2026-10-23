@@ -1,0 +1,111 @@
+---
+// src/layouts/BaseLayout.astro
+import '../styles/tokens.css';
+import '../styles/typography.css';
+import '../styles/base.css';
+
+import { Scene } from '../webgl/Scene';
+import { Cursor } from '../components/ui/Cursor';
+import Nav from '../components/ui/Nav.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Eyad Gaber // Full Stack Engineer & Systems Developer',
+  description = 'Portfolio of Eyad Gaber — Full Stack Engineer & Systems Developer specializing in Linux environments, real-time web applications, and desktop tooling.'
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://eyad.is-a.dev');
+const ogImageURL = new URL('/og-image.png', canonicalURL);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="theme-color" content="#070709" />
+
+    <!-- Open Graph / Facebook / Discord / WhatsApp / Telegram -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Eyad Gaber // Portfolio" />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageURL.href} />
+    <meta property="og:image:secure_url" content={ogImageURL.href} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1920" />
+    <meta property="og:image:height" content="943" />
+    <meta property="og:image:alt" content="Eyad Gaber — Full Stack Engineer & Systems Developer" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL.href} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL.href} />
+    <meta name="twitter:image:alt" content="Eyad Gaber — Full Stack Engineer & Systems Developer" />
+    <!-- High-Priority 3D Texture Preloads (bypasses JS waterfall) -->
+    <link rel="preload" as="image" href="/textures/hero/portrait-fallback.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="/textures/hero/portrait@1x.webp" media="(max-width: 768px)" type="image/webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="/textures/hero/portrait@2x.webp" media="(min-width: 769px)" type="image/webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="/textures/hero/depth.webp" type="image/webp" fetchpriority="high" />
+  </head>
+  <body>
+    <!-- Persistent WebGL 3D Canvas Layer -->
+    <div id="webgl-root" transition:persist>
+      <Scene client:only="react" />
+    </div>
+
+
+    <!-- Interactive Desktop Cursor -->
+    <Cursor client:load />
+
+    <!-- Navigation Header -->
+    <Nav />
+
+    <!-- Main Page Content -->
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <script>
+      import { initSmoothScroll } from '../lib/motion';
+
+      // Initialize Lenis smooth scroll
+      document.addEventListener('DOMContentLoaded', () => {
+        const lenis = initSmoothScroll();
+
+        // Smooth scroll for internal anchor links (#work, #about, etc.)
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener('click', (e) => {
+            const targetId = anchor.getAttribute('href');
+            if (targetId && targetId !== '#') {
+              const targetEl = document.querySelector(targetId);
+              if (targetEl) {
+                e.preventDefault();
+                if (lenis) {
+                  lenis.scrollTo(targetEl as HTMLElement, { offset: 0, duration: 1.1 });
+                } else {
+                  targetEl.scrollIntoView({ behavior: 'smooth' });
+                }
+              }
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

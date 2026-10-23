@@ -1,0 +1,220 @@
+---
+// src/components/sections/Stack.astro
+
+const stackGroups = [
+  {
+    category: 'SYSTEMS & LINUX',
+    skills: ['Linux / Unix', 'GNOME Shell (GJS)', 'Bash Scripting', 'Computer Networks', 'IT Infrastructure', 'Git & GitHub']
+  },
+  {
+    category: 'FRONTEND & WEB',
+    skills: ['TypeScript (Strict)', 'React 19', 'JavaScript (ESNext)', 'Vite & Bundlers', 'Framer Motion', 'Astro & Islands']
+  },
+  {
+    category: 'BACKEND & REAL-TIME',
+    skills: ['Node.js & Bun', 'WebSockets (ws)', 'Express.js', 'RESTful APIs', 'Google GenAI SDK', 'JWT Authentication']
+  },
+  {
+    category: 'CROSS-PLATFORM & DATA',
+    skills: ['Flutter', 'Dart', 'C# / WPF', 'GObject & GLib', 'PostgreSQL & SQLite', 'Supabase']
+  }
+];
+
+const marqueeItems = [
+  'LINUX & UNIX', 'FLUTTER', 'DART', 'TYPESCRIPT', 'REACT 19',
+  'NODE.JS', 'BUN', 'WEBSOCKETS', 'GNOME GJS', 'POSTGRESQL',
+  'SQLITE', 'ASTRO', 'SUPABASE', 'C# / .NET', 'BASH SCRIPTING'
+];
+---
+
+<section class="stack-section" id="stack" aria-label="Technical Stack">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">
+        <span class="badge-line"></span>
+        <span class="badge-text tracking-wide-caps">CAPABILITIES</span>
+      </div>
+      <h2 class="section-title">CORE STACK</h2>
+    </div>
+
+    <div class="stack-grid">
+      {stackGroups.map(group => (
+        <div class="stack-card glass-panel">
+          <span class="stack-cat font-mono">{group.category}</span>
+          <ul class="stack-list">
+            {group.skills.map(skill => (
+              <li class="stack-item">
+                <span class="item-dot"></span>
+                <span class="item-name">{skill}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Infinite Marquee Ticker -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track">
+      {[...marqueeItems, ...marqueeItems].map(item => (
+        <div class="marquee-item">
+          <span class="marquee-text font-display">{item}</span>
+          <span class="marquee-separator">&bull;</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .stack-section {
+    position: relative;
+    padding: clamp(6rem, 10vw, 10rem) 0 4rem;
+    background-color: var(--bg-primary);
+    z-index: var(--z-content);
+    overflow: hidden;
+  }
+
+  .section-header {
+    margin-bottom: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .badge-line {
+    width: 28px;
+    height: 1px;
+    background: var(--accent-primary);
+  }
+
+  .badge-text {
+    color: var(--accent-primary);
+    font-size: var(--text-xs);
+  }
+
+  .section-title {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 2vw, 1.75rem);
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+  }
+
+  .stack-card {
+    padding: clamp(1.75rem, 2.5vw, 2.25rem);
+    background: rgba(14, 14, 19, 0.6);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .stack-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .stack-cat {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--accent-secondary);
+    font-weight: 600;
+  }
+
+  .stack-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .stack-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .item-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--border-light);
+  }
+
+  /* Marquee */
+  .marquee-wrap {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    overflow: hidden;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(14, 14, 19, 0.4);
+    display: flex;
+  }
+
+  .marquee-track {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    white-space: nowrap;
+    animation: marqueeScroll 24s linear infinite;
+  }
+
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .marquee-text {
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.22);
+    transition: color 0.3s ease;
+  }
+
+  .marquee-text:hover {
+    color: #ffffff;
+  }
+
+  .marquee-separator {
+    color: var(--accent-secondary);
+    font-size: 1.2rem;
+  }
+
+  @keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (max-width: 1024px) {
+    .stack-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .stack-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

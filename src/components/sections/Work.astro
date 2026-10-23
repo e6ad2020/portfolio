@@ -1,0 +1,521 @@
+---
+// src/components/sections/Work.astro
+
+interface Collaborator {
+  name: string;
+  github: string;
+}
+
+interface Project {
+  title: string;
+  category: string;
+  logo: string;
+  summary: string;
+  stack: string[];
+  gradient: string;
+  link: string;
+  github: string;
+  collaborator?: Collaborator;
+}
+
+const projects: Project[] = [
+  {
+    title: 'EVA CANTEEN',
+    category: 'Full Stack & Real-Time Web',
+    logo: '/assets/projects-logos/eva-canteen.png',
+    summary: 'Dual-interface cafeteria ordering system and live admin analytics dashboard with WebSockets, SQLite persistence, and custom multi-theme architecture.',
+    stack: ['Vanilla JS', 'Node.js', 'Express', 'SQLite', 'WebSockets', 'Chart.js'],
+    gradient: 'linear-gradient(135deg, rgba(0, 210, 255, 0.25) 0%, rgba(14, 14, 19, 0.95) 70%)',
+    link: 'https://github.com/e6ad2020/EVA_Canteen',
+    github: 'https://github.com/e6ad2020/EVA_Canteen'
+  },
+  {
+    title: 'PROJECT FACE (JULIA)',
+    category: 'Multimodal AI & Voice Assistant',
+    logo: '/assets/projects-logos/julia.png',
+    summary: 'Real-time multimodal AI skincare advisor powered by Google Gemini Live API over WebSockets/WebRTC, compiling tailored skincare routines with voice & text feedback.',
+    stack: ['React', 'TypeScript', 'Google GenAI SDK', 'Vite', 'Framer Motion', 'Tailwind'],
+    gradient: 'linear-gradient(135deg, rgba(255, 85, 0, 0.25) 0%, rgba(14, 14, 19, 0.95) 70%)',
+    link: 'https://projectface-seven.vercel.app',
+    github: 'https://github.com/e6ad2020/Project-Face'
+  },
+  {
+    title: 'POWER MENU',
+    category: 'Linux Desktop & GNOME Extension',
+    logo: '/assets/projects-logos/power-menu.svg',
+    summary: 'Native GNOME Shell extension providing an intuitive Alt+F4 power management dialogue for Linux desktops with custom keyboard bindings and shell integration.',
+    stack: ['GJS (JavaScript)', 'GNOME Shell', 'GObject', 'Linux Scripts', 'CSS'],
+    gradient: 'linear-gradient(135deg, rgba(0, 210, 255, 0.22) 0%, rgba(14, 14, 19, 0.95) 70%)',
+    link: 'https://extensions.gnome.org/extension/9710/power-menu/',
+    github: 'https://github.com/e6ad2020/power-menu-gs-extension'
+  },
+  {
+    title: 'RTC RESALA SYSTEM',
+    category: 'Charity Platform & Gamification',
+    logo: '/assets/projects-logos/rtc.png',
+    summary: 'Automated volunteer tracking and gamified community portal built for the RTC Resala charity, developed in collaboration with Omar Mohamed. Features volunteer profiles, hour thresholds, and real-time analytics.',
+    collaborator: {
+      name: 'Omar Mohamed',
+      github: 'https://github.com/Omar-0O'
+    },
+    stack: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind', 'Vite'],
+    gradient: 'linear-gradient(135deg, rgba(255, 184, 0, 0.22) 0%, rgba(14, 14, 19, 0.95) 70%)',
+    link: 'https://github.com/Omar-0O/RTC',
+    github: 'https://github.com/Omar-0O/RTC'
+  }
+];
+
+// Automatically scale baseline title font size based on character length
+function getTitleSizeClass(title: string): string {
+  const len = title.length;
+  if (len >= 19) return 'title--compact'; // e.g. "PROJECT FACE (JULIA)" (20 chars) -> bold, balanced font
+  if (len >= 14) return 'title--medium';  // e.g. "RTC RESALA SYSTEM" (17 chars)
+  return 'title--large';                 // e.g. "EVA CANTEEN" (11 chars), "POWER MENU" (10 chars)
+}
+---
+
+<section class="work-section" id="work" aria-label="Selected Projects">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">
+        <span class="badge-line"></span>
+        <span class="badge-text tracking-wide-caps">PORTFOLIO</span>
+      </div>
+      <div class="section-title-wrap">
+        <h2 class="section-title">SELECTED WORKS</h2>
+        <span class="section-count">(04)</span>
+      </div>
+    </div>
+
+    <div class="projects-grid">
+      {projects.map((project, idx) => {
+        const titleClass = getTitleSizeClass(project.title);
+        return (
+          <article class="project-card glass-panel" style={`background: ${project.gradient};`}>
+            <div class="project-header">
+              <div class="project-content-col">
+                <div class="project-meta">
+                  <span class="project-index">0{idx + 1} //</span>
+                  <span class="project-cat">{project.category}</span>
+                </div>
+                <h3 class={`project-name font-display ${titleClass}`} title={project.title}>
+                  {project.title}
+                </h3>
+                <p class="project-summary">{project.summary}</p>
+                {project.collaborator && (
+                  <div class="project-collab">
+                    <span class="collab-label">Co-developed with</span>
+                    <a
+                      href={project.collaborator.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="collab-link"
+                      aria-label={`Visit ${project.collaborator.name}'s GitHub profile`}
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                      </svg>
+                      <span>{project.collaborator.name}</span>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="7" y1="17" x2="17" y2="7"></line>
+                        <polyline points="7 7 17 7 17 17"></polyline>
+                      </svg>
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              <div class="project-logo-col">
+                <div
+                  class="project-logo-badge interactive"
+                  aria-label={`${project.title} logo`}
+                >
+                  <img
+                    src={project.logo}
+                    alt={`${project.title} logo`}
+                    class="project-logo-img"
+                    width="120"
+                    height="120"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="project-footer">
+              <div class="project-tags">
+                {project.stack.map(tag => (
+                  <span class="project-tag">{tag}</span>
+                ))}
+              </div>
+
+              <div class="project-actions">
+                <a href={project.github} target="_blank" rel="noopener noreferrer" class="action-btn action-btn--primary" aria-label={`View ${project.title} on GitHub`}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                  </svg>
+                  <span>GitHub</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .work-section {
+    position: relative;
+    padding: clamp(6rem, 10vw, 10rem) 0;
+    background-color: var(--bg-primary);
+    z-index: var(--z-content);
+  }
+
+  .section-header {
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+  }
+
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .badge-line {
+    width: 28px;
+    height: 1px;
+    background: var(--accent-primary);
+  }
+
+  .badge-text {
+    color: var(--accent-primary);
+    font-size: var(--text-xs);
+  }
+
+  .section-title-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .section-title {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .section-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    color: var(--text-muted);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.75rem, 2.8vw, 2.5rem);
+    /* No artificial min-height: removes the huge empty space */
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    transition: transform 0.4s var(--ease-out-expo), border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .project-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+  }
+
+  .project-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: flex-start;
+    gap: clamp(1.25rem, 2vw, 2rem);
+    margin-bottom: clamp(1.5rem, 2.2vw, 2rem);
+  }
+
+  .project-content-col {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .project-index {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--accent-primary);
+  }
+
+  .project-cat {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .project-name {
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #ffffff;
+    /* Increased spacing between title and description slightly */
+    margin: 0.35rem 0 1.15rem 0;
+    line-height: 1.18;
+    text-wrap: balance;
+    transition: font-size 0.2s cubic-bezier(0.2, 0.8, 0.4, 1);
+  }
+
+  /* Bold, prominent title hierarchy: large and impactful across all titles */
+  .title--large {
+    font-size: clamp(1.95rem, 2.8vw, 2.5rem);
+  }
+
+  .title--medium {
+    font-size: clamp(1.75rem, 2.4vw, 2.2rem);
+  }
+
+  .title--compact {
+    font-size: clamp(1.6rem, 2.1vw, 2.0rem);
+  }
+
+  .project-summary {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .project-collab {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+  }
+
+  .collab-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .collab-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--accent-primary);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .collab-link:hover {
+    background: rgba(0, 210, 255, 0.12);
+    border-color: var(--accent-primary);
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+
+  .project-logo-col {
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
+
+  .project-logo-badge {
+    position: relative;
+    width: clamp(96px, 9vw, 120px);
+    height: clamp(96px, 9vw, 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(18, 18, 26, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius-lg);
+    padding: clamp(12px, 1.2vw, 18px);
+    cursor: default;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.4, 1), border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .project-logo-badge:hover {
+    background: rgba(26, 26, 38, 0.96);
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+  }
+
+  .project-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    pointer-events: none;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  .project-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-top: clamp(1.25rem, 2vw, 1.5rem);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 0.5rem;
+  }
+
+  .project-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    padding: 0.3rem 0.65rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+  }
+
+  .project-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 0.9rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.03);
+    transition: all 0.25s ease;
+  }
+
+  .action-btn:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .action-btn--primary {
+    gap: 0.4rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: #ffffff;
+    padding: 0.55rem 1.1rem;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .action-btn--primary:hover {
+    background: #ffffff;
+    color: var(--bg-primary);
+    border-color: #ffffff;
+  }
+
+  @media (max-width: 900px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .project-header {
+      gap: 1rem;
+    }
+
+    .title--large {
+      font-size: 1.7rem;
+    }
+
+    .title--medium {
+      font-size: 1.55rem;
+    }
+
+    .title--compact {
+      font-size: 1.45rem;
+    }
+
+    .project-logo-badge {
+      width: clamp(76px, 20vw, 92px);
+      height: clamp(76px, 20vw, 92px);
+      padding: 10px;
+    }
+  }
+</style>
+
+<script>
+  // High-clarity 3D tilt tracking without raster scaling or blur
+  document.addEventListener('DOMContentLoaded', () => {
+    const logoBadges = document.querySelectorAll<HTMLElement>('.project-logo-badge');
+    logoBadges.forEach((badge) => {
+      let isHovered = false;
+
+      badge.addEventListener('mouseenter', () => {
+        isHovered = true;
+      });
+
+      badge.addEventListener('mousemove', (e: MouseEvent) => {
+        if (!isHovered) return;
+        const rect = badge.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+
+        const normX = x / (rect.width / 2);
+        const normY = y / (rect.height / 2);
+
+        const rotateX = -normY * 10;
+        const rotateY = normX * 10;
+
+        badge.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+      });
+
+      badge.addEventListener('mouseleave', () => {
+        isHovered = false;
+        badge.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
+      });
+    });
+  });
+</script>

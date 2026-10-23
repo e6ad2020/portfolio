@@ -1,0 +1,161 @@
+---
+// src/components/sections/Intro.astro
+---
+
+<section class="intro-section" id="about" aria-label="Introduction">
+  <div class="container">
+    <div class="intro-badge">
+      <span class="badge-line"></span>
+      <span class="badge-text tracking-wide-caps">APPROACH &amp; FOUNDATIONS</span>
+    </div>
+
+    <div class="intro-statement">
+      <p class="statement-large">
+        I engineer <span class="highlight-warm">robust full-stack systems</span>, desktop Linux utilities, and real-time interactive applications where <span class="highlight-cool">deep OS &amp; networking fundamentals</span> converge with clean, modern web engineering.
+      </p>
+    </div>
+
+    <div class="intro-metrics">
+      <div class="metric-item">
+        <span class="metric-number">17<span class="metric-accent">+</span></span>
+        <span class="metric-label">Open Source</span>
+        <p class="metric-desc">Public repositories spanning Linux tools, desktop utilities, and web apps.</p>
+      </div>
+
+      <div class="metric-item">
+        <span class="metric-number">Linux<span class="metric-accent">/OS</span></span>
+        <span class="metric-label">SysAdmin &amp; OS</span>
+        <p class="metric-desc">Hardened servers, automated shell scripting, and native GNOME extensions.</p>
+      </div>
+
+      <div class="metric-item">
+        <span class="metric-number">Real<span class="metric-accent">-Time</span></span>
+        <span class="metric-label">Web Architecture</span>
+        <p class="metric-desc">Full-stack WebSockets, bi-directional event streams, and low-latency state.</p>
+      </div>
+
+      <div class="metric-item">
+        <span class="metric-number">Multi<span class="metric-accent">-OS</span></span>
+        <span class="metric-label">Cross-Platform</span>
+        <p class="metric-desc">Flutter, Dart, React, and native Linux desktop engineering.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro-section {
+    position: relative;
+    padding: clamp(6rem, 12vw, 12rem) 0;
+    background-color: var(--bg-primary);
+    z-index: var(--z-content);
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .intro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: var(--space-xl);
+  }
+
+  .badge-line {
+    width: 28px;
+    height: 1px;
+    background: var(--accent-primary);
+  }
+
+  .badge-text {
+    color: var(--accent-primary);
+    font-size: var(--text-xs);
+  }
+
+  .intro-statement {
+    max-width: 1100px;
+    margin-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .statement-large {
+    font-size: clamp(1.75rem, 3.8vw, 3.25rem);
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+  }
+
+  .highlight-warm {
+    color: #ffffff;
+    background: linear-gradient(120deg, #ff7a00, #ff3b00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+
+  .highlight-cool {
+    color: #ffffff;
+    background: linear-gradient(120deg, #00d2ff, #0077ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+
+  .intro-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    border-top: 1px solid var(--border-subtle);
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .metric-number {
+    font-family: var(--font-sans);
+    font-size: clamp(1.85rem, 3.2vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    white-space: nowrap;
+    margin-bottom: var(--space-xs);
+  }
+
+  .metric-accent {
+    color: var(--accent-secondary);
+    font-weight: 600;
+    margin-left: 2px;
+  }
+
+  .metric-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xs);
+  }
+
+  .metric-desc {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 900px) {
+    .intro-metrics {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .intro-metrics {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>
