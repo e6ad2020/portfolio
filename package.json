@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:app": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "prepare:textures": "node scripts/prepare_textures.mjs"
