@@ -157,7 +157,7 @@ export const HeroPortrait: React.FC<HeroPortraitProps> = ({ onReady }) => {
     uColor: { value: textures.colorTex },
     uDepth: { value: textures.depthTex },
     uPointer: { value: new THREE.Vector2(0, 0) },
-    uStrength: { value: isPortrait ? 0.038 : 0.042 },
+    uStrength: { value: isPortrait ? 0.018 : 0.028 },
     uFocus: { value: 0.65 },
     uExposure: { value: 0.95 },
     uRim: { value: 0.9 },
@@ -198,10 +198,9 @@ export const HeroPortrait: React.FC<HeroPortraitProps> = ({ onReady }) => {
       materialRef.current.uniforms.uPointer.value.set(ptr[0], ptr[1]);
 
       if (meshRef.current) {
-        const maxYaw = isPortrait ? 0.075 : 0.052;
-        const maxPitch = isPortrait ? 0.048 : 0.032;
-        meshRef.current.rotation.y = THREE.MathUtils.clamp(ptr[0] * (isPortrait ? 0.075 : 0.052), -maxYaw, maxYaw);
-        meshRef.current.rotation.x = THREE.MathUtils.clamp(-ptr[1] * (isPortrait ? 0.048 : 0.032), -maxPitch, maxPitch);
+        // Flat mesh rotation across all screens eliminates awkward perspective keystoning
+        // and cardboard-cutout angles. Volumetric 3D depth is computed organically inside the shader.
+        meshRef.current.rotation.set(0, 0, 0);
       }
     }
 

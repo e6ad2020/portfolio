@@ -36,14 +36,18 @@ void main() {
   // so displaced lookups near the edge can never reach outside the subject.
   float edgeWeight = smoothstep(0.5, 0.95, depthSample.a) * smoothstep(0.02, 0.14, rawDepth);
 
-  // Parallax displacement
-  vec2 parallaxOffset = ptr * (rawDepth - uFocus) * uStrength * edgeWeight;
+  // Parallax displacement with isotropic aspect ratio correction (1536 / 1024 = 1.5)
+  // Ensures horizontal displacement in pixels matches vertical displacement 1:1,
+  // completely eliminating oval face stretching on mobile screens.
+  vec2 aspectCorrection = vec2(1.0 / 1.5, 1.0);
+  vec2 parallaxOffset = ptr * aspectCorrection * (rawDepth - uFocus) * uStrength * edgeWeight;
   vec2 sampleUv = clamp(uv + parallaxOffset, vec2(0.001), vec2(0.999));
 
-  // Secondary depth sample for perspective convergence (ignored if it lands outside the subject)
+  // Secondary depth sample with boundary clamp to prevent angular creases and edge tearing
   vec4 refinedSample = texture2D(uDepth, sampleUv);
-  float refinedDepth = mix(rawDepth, refinedSample.r, smoothstep(0.5, 0.95, refinedSample.a));
-  vec2 refinedOffset = ptr * (refinedDepth - uFocus) * uStrength * edgeWeight;
+  float depthDelta = clamp(refinedSample.r - rawDepth, -0.08, 0.08);
+  float refinedDepth = rawDepth + depthDelta * smoothstep(0.5, 0.95, refinedSample.a);
+  vec2 refinedOffset = ptr * aspectCorrection * (refinedDepth - uFocus) * uStrength * edgeWeight;
   vec2 finalSampleUv = clamp(uv + refinedOffset, vec2(0.001), vec2(0.999));
 
   // Sample portrait at displaced coordinates; if that lookup lands outside the subject,
@@ -71,9 +75,9 @@ void main() {
   float dD = texture2D(uDepth, uvD).r;
   float dU = texture2D(uDepth, uvU).r;
 
-  // Gradients weighted to prevent silhouette border outlines
-  float dX = clamp((dR - dL) * edgeWeight, -0.10, 0.10) * 8.0;
-  float dY = clamp((dU - dD) * edgeWeight, -0.10, 0.10) * 8.0;
+  // Gradients weighted to prevent silhouette border outlines and jagged angle spikes
+  float dX = clamp((dR - dL) * edgeWeight, -0.06, 0.06) * 4.5;
+  float dY = clamp((dU - dD) * edgeWeight, -0.06, 0.06) * 4.5;
   vec3 surfNormal = normalize(vec3(-dX, -dY, 1.0));
 
   // --- Cinematic Interactive Relighting (Warm Amber + Cool Teal) ---

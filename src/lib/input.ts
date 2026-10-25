@@ -19,6 +19,7 @@ class InputController {
   private idleTime = 0;
   private prefersReducedMotion = false;
   private isMobile = false;
+  private baselineBeta: number | null = null;
   public hasGyro = false;
 
   constructor() {
@@ -126,22 +127,19 @@ class InputController {
 
   private onTouchStart(e: TouchEvent) {
     if (this.prefersReducedMotion || !e.touches[0]) return;
-    // If user is already scrolling content below the hero, ignore touch for 3D look
     if (typeof window !== 'undefined' && window.scrollY > 40) return;
 
     const touch = e.touches[0];
     const nx = (touch.clientX / window.innerWidth) * 2 - 1;
     const ny = -(touch.clientY / window.innerHeight) * 2 + 1;
-    // Subtle initial touch response, dampened so thumb touch does not jerk head
-    this.target[0] = Math.max(-0.55, Math.min(0.55, nx * 0.55));
-    this.target[1] = Math.max(-0.35, Math.min(0.35, ny * 0.35));
+    // Gentle touch response: thumb on screen should feel subtle, not jerk the 3D mesh
+    this.target[0] = Math.max(-0.25, Math.min(0.25, nx * 0.25));
+    this.target[1] = Math.max(-0.18, Math.min(0.18, ny * 0.18));
     this.idleTime = 0;
   }
 
   private onTouchMove(e: TouchEvent) {
     if (this.prefersReducedMotion || !e.touches[0]) return;
-    // Crucial for mobile scroll UX: if page is scrolled past the hero top,
-    // touches are scrolling gestures, not 3D look-around gestures.
     if (typeof window !== 'undefined' && window.scrollY > 40) return;
 
     const touch = e.touches[0];
@@ -149,24 +147,37 @@ class InputController {
     const ny = -(touch.clientY / window.innerHeight) * 2 + 1;
 
     // Heavily damp vertical pitch on touch so vertical scrolling swipes do not pitch head back
-    this.target[0] = Math.max(-0.55, Math.min(0.55, nx * 0.55));
-    this.target[1] = Math.max(-0.35, Math.min(0.35, ny * 0.35));
+    this.target[0] = Math.max(-0.25, Math.min(0.25, nx * 0.25));
+    this.target[1] = Math.max(-0.18, Math.min(0.18, ny * 0.18));
     this.idleTime = 0;
   }
 
   private onTouchEnd() {
     // When finger is lifted, return target gently to center neutral
-    this.target[0] *= 0.2;
-    this.target[1] *= 0.2;
+    this.target[0] = 0;
+    this.target[1] = 0;
   }
 
   private onOrientation(e: DeviceOrientationEvent) {
     if (this.prefersReducedMotion || e.gamma === null || e.beta === null) return;
     this.hasGyro = true;
-    // gamma: left-to-right tilt [-90, 90]. Natural handheld range is ~[-25, 25]
-    // beta: front-to-back tilt [-180, 180]. Natural handheld holding angle is ~45°–50°
-    const gx = Math.max(-0.85, Math.min(0.85, e.gamma / 22));
-    const gy = Math.max(-0.75, Math.min(0.75, (e.beta - 48) / 22));
+
+    // Smooth baseline holding angle initialization
+    if (this.baselineBeta === null) {
+      this.baselineBeta = e.beta;
+    } else {
+      // Very slowly drift baseline toward current pitch so changing posture doesn't freeze head
+      this.baselineBeta += (e.beta - this.baselineBeta) * 0.005;
+    }
+
+    // gamma: left-to-right roll [-90, 90]. Natural handheld range is ~[-25, 25]
+    // Scaled smoothly so normal hand movement produces subtle 3D without edge stretching
+    const gx = Math.max(-0.35, Math.min(0.35, e.gamma / 45));
+
+    // beta: front-to-back tilt relative to natural holding angle
+    const relativeBeta = e.beta - this.baselineBeta;
+    const gy = Math.max(-0.28, Math.min(0.28, relativeBeta / 38));
+
     this.target[0] = gx;
     this.target[1] = -gy;
     this.idleTime = 0;
@@ -194,7 +205,7 @@ class InputController {
     // Ensures the 3D depth and rim light are always alive and visible on phones
     // even if placed on a flat surface or held still.
     const t = this.idleTime * 0.85;
-    const driftStrength = this.isMobile ? 0.30 : 0.15;
+    const driftStrength = this.isMobile ? 0.10 : 0.15;
     const driftX = (Math.sin(t) * 0.7 + Math.sin(t * 0.35) * 0.3) * driftStrength;
     const driftY = (Math.cos(t * 0.75) * 0.7 + Math.sin(t * 1.4) * 0.3) * driftStrength * 0.65;
 
