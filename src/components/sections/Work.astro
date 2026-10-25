@@ -130,6 +130,7 @@ function getTitleSizeClass(title: string): string {
                   class="project-logo-badge interactive"
                   aria-label={`${project.title} logo`}
                 >
+                  <div class="badge-glare"></div>
                   <img
                     src={project.logo}
                     alt={`${project.title} logo`}
@@ -360,22 +361,32 @@ function getTitleSizeClass(title: string): string {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(18, 18, 26, 0.9);
+    background: rgba(18, 18, 26, 0.92);
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: var(--radius-lg);
     padding: clamp(12px, 1.2vw, 18px);
-    cursor: default;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.4, 1), border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+    overflow: visible;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
   }
 
   .project-logo-badge:hover {
-    background: rgba(26, 26, 38, 0.96);
-    border-color: rgba(255, 255, 255, 0.28);
-    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 25px rgba(0, 210, 255, 0.18);
+  }
+
+  .badge-glare {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 65%);
+    opacity: 0;
+    mix-blend-mode: overlay;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+    overflow: hidden;
   }
 
   .project-logo-img {
@@ -384,9 +395,16 @@ function getTitleSizeClass(title: string): string {
     object-fit: contain;
     border-radius: var(--radius-sm);
     pointer-events: none;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    position: relative;
+    z-index: 3;
     image-rendering: -webkit-optimize-contrast;
+    transition: transform 0.26s cubic-bezier(0.2, 0.8, 0.25, 1), filter 0.26s ease;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
+    will-change: transform, filter;
+  }
+
+  .project-logo-badge:hover .project-logo-img {
+    filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 14px rgba(0, 210, 255, 0.25));
   }
 
   .project-footer {
@@ -487,18 +505,32 @@ function getTitleSizeClass(title: string): string {
 </style>
 
 <script>
-  // High-clarity 3D tilt tracking without raster scaling or blur
-  document.addEventListener('DOMContentLoaded', () => {
-    const logoBadges = document.querySelectorAll<HTMLElement>('.project-logo-badge');
-    logoBadges.forEach((badge) => {
+  // Interactive logo pop-out: the logo image itself moves and breaks outside the badge box on hover
+  function initProjectLogoInteractions() {
+    const badges = document.querySelectorAll<HTMLElement>('.project-logo-badge');
+    badges.forEach((badge) => {
+      if (badge.dataset.logoPopInit === 'true') return;
+      badge.dataset.logoPopInit = 'true';
+
+      const img = badge.querySelector<HTMLElement>('.project-logo-img');
+      const glare = badge.querySelector<HTMLElement>('.badge-glare');
+      if (!img) return;
+
       let isHovered = false;
+      let rafId: number | null = null;
+      let targetX = 0;
+      let targetY = -6;
+      let glareX = 50;
+      let glareY = 50;
 
       badge.addEventListener('mouseenter', () => {
         isHovered = true;
+        if (glare) glare.style.opacity = '1';
+        // Immediate pop-out when cursor touches the badge
+        img.style.transform = 'translate3d(0px, -6px, 0px) scale(1.22)';
       });
 
       badge.addEventListener('mousemove', (e: MouseEvent) => {
-        if (!isHovered) return;
         const rect = badge.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
@@ -506,16 +538,44 @@ function getTitleSizeClass(title: string): string {
         const normX = x / (rect.width / 2);
         const normY = y / (rect.height / 2);
 
-        const rotateX = -normY * 10;
-        const rotateY = normX * 10;
+        // Logo moves dynamically towards the cursor, extending outside the badge frame
+        targetX = normX * 18;
+        targetY = normY * 18 - 4;
+        glareX = ((e.clientX - rect.left) / rect.width) * 100;
+        glareY = ((e.clientY - rect.top) / rect.height) * 100;
 
-        badge.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+        if (!rafId) {
+          rafId = requestAnimationFrame(() => {
+            if (isHovered) {
+              img.style.transform = `translate3d(${targetX.toFixed(1)}px, ${targetY.toFixed(1)}px, 0px) scale(1.24)`;
+              if (glare) {
+                glare.style.background = `radial-gradient(circle at ${glareX.toFixed(1)}% ${glareY.toFixed(1)}%, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0) 65%)`;
+              }
+            }
+            rafId = null;
+          });
+        }
       });
 
       badge.addEventListener('mouseleave', () => {
         isHovered = false;
-        badge.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+        // Smoothly glide back into the center of the badge
+        img.style.transform = 'translate3d(0px, 0px, 0px) scale(1)';
+        if (glare) {
+          glare.style.opacity = '0';
+        }
       });
     });
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProjectLogoInteractions);
+  } else {
+    initProjectLogoInteractions();
+  }
+  document.addEventListener('astro:page-load', initProjectLogoInteractions);
 </script>
